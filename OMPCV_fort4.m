@@ -1,4 +1,4 @@
-function [xp,xcap,cas,xo,o,ecvp,ecvo,egp,ego] = OMPCV_fort4(A, Acv, y, ycv, d,xtrue,p,sig)
+function [xcap,cas,xo,o,ecvp,ecvo,egp,ego] = OMPCV_fort4(A, Acv, y, ycv, d,xtrue,sig)
     % ego = epsilon generalised o (oracle)
     % egp = epsilon generalised p
     % cas is 1 if o==p (dicard for theorem 4) , and see below for other
@@ -15,6 +15,7 @@ function [xp,xcap,cas,xo,o,ecvp,ecvo,egp,ego] = OMPCV_fort4(A, Acv, y, ycv, d,xt
     ego=sum(xtrue.^2)+sig^2;
     xo=zeros(size(xtrue));
     oidx=0;
+    p=0;
     for i = 1:d        
         a = A'*r;
         [~,I] = max(abs(a));
@@ -25,17 +26,25 @@ function [xp,xcap,cas,xo,o,ecvp,ecvo,egp,ego] = OMPCV_fort4(A, Acv, y, ycv, d,xt
         if epscv < minepscv
             minepscv = epscv;
             minx = Theta1;
-        end
-        if i==p
-            xp=Theta1;
+            p = i;
             if any(xtrue~=0 & Theta1==0) % T\Tp isnt phi 
                 cas=2;
             else
                 cas=3;
             end
-            ecvp=sum((Acv*Theta1 - ycv).^2);
+            %ecvp=sum((Acv*Theta1 - ycv).^2);
             egp=sum((Theta1 - xtrue).^2)+sig^2;
         end
+%         if i==p
+%             xp=Theta1;
+%             if any(xtrue~=0 & Theta1==0) % T\Tp isnt phi 
+%                 cas=2;
+%             else
+%                 cas=3;
+%             end
+%             ecvp=sum((Acv*Theta1 - ycv).^2);
+%             egp=sum((Theta1 - xtrue).^2)+sig^2;
+%         end
         %sum((Theta1 - xtrue).^2)+sig^2;
         if sum((Theta1 - xtrue).^2)+sig^2<ego
             ego=sum((Theta1 - xtrue).^2)+sig^2;
@@ -49,5 +58,6 @@ function [xp,xcap,cas,xo,o,ecvp,ecvo,egp,ego] = OMPCV_fort4(A, Acv, y, ycv, d,xt
         cas=1;
     end
     o=oidx;
+    ecvp = minepscv;
     %size(setdiff(find(xtrue~=0),find( minx==0)))
 end
