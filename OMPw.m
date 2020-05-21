@@ -6,9 +6,9 @@ function [Theta, T] = OMPw(A, y, M)
     i = 0;
 %     B =  sqrt(sum(A.^2,1));
 %     Au =  bsxfun(@rdivide,A,B);
-    while i<M & norm(y-A*Theta1) > 1e-5*norm(y)
+    while i<M && (norm(y-A*Theta1) > (0.00001)*norm(y))       
         a = A'*r;
-        [M,I] = max(abs(a));
+        [~,I] = max(abs(a));
         T1 = union(T1, I(1));
         %T1;
         i = i+1;
