@@ -23,3 +23,13 @@ y = A*x+n;
 mlist=[40:40:320];
 %x2=OMP_ward(A,y,0.01,k+50);
 [x_out, j] = num_meas(y, A, sig, mlist, 0.03,size(mlist,2),k);
+figure(1)
+plot(x)
+title('Original signal')
+xlabel('time')
+ylabel('value')
+figure(2)
+plot(x_out)
+title('Reconstructed signal')
+xlabel('time')
+ylabel('value')
