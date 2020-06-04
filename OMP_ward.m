@@ -1,4 +1,4 @@
-function [Theta, T] = OMP_ward(A, y, eps, prev)
+function [Theta, T] = OMP_ward(A, y, eps, prev,k)
     r = y;
     T1 = [];
     n = size(A,2);
@@ -6,9 +6,10 @@ function [Theta, T] = OMP_ward(A, y, eps, prev)
     i = 0;
 %     B =  sqrt(sum(A.^2,1));
 %     Au =  bsxfun(@rdivide,A,B);
-    while sum(r.^2) > eps
+    while (sum(r.^2) > eps ) && i<k
+        sum(r.^2)
         a = A'*r;
-        [M,I] = max(abs(a));
+        [~,I] = max(abs(a));
         T1 = union(T1, I(1));
         %T1;
         i = i+1;
