@@ -1,4 +1,4 @@
-function [lamfin,xfin]=get_lambda(y,Phi,ycv,Psi,x0)
+function [lamfin,xfin]=get_lambda(y,Phi,ycv,Psi,~)
     % for bookeeping
 X = []; Lambda = []; Sparsity = [];
 % initialization
@@ -17,17 +17,17 @@ for it=1:niter
     if norm(c)<1e-6
         break;
     end
-    if it<=6
-        % Display to check that x_lambda is indeed a solution
-        subplot(2,3,it);
-        hold on;
-        stem( I, c(I)/lambda, 'b.' );
-        stem( J, c(J)/lambda, 'r.' );
-        plot([1 N], [1 1], 'k--');
-        plot([1 N],-[1 1], 'k--');
-        axis([1 N -1.05 1.05]);
-        title(['Step ' num2str(it)]);
-    end
+%     if it<=6
+%         % Display to check that x_lambda is indeed a solution
+%         subplot(2,3,it);
+%         hold on;
+%         stem( I, c(I)/lambda, 'b.' );
+%         stem( J, c(J)/lambda, 'r.' );
+%         plot([1 N], [1 1], 'k--');
+%         plot([1 N],-[1 1], 'k--');
+%         axis([1 N -1.05 1.05]);
+%         title(['Step ' num2str(it)]);
+%     end
     % update direction
     d = zeros(N,1);
     d(I) = (Phi(:,I)'*Phi(:,I)) \ sign(c(I));
@@ -74,8 +74,8 @@ end
 rt=sqrt(sum((repmat(ycv,1,size(X,2))-Psi*X).^2,1));
 [~,posi]=min(rt);
 %posi
-bst=(sqrt(sum((repmat(x0,1,size(X,2))-X).^2,1)))/norm(x0);
-[~,pos2]=min(bst);
+%bst=(sqrt(sum((repmat(x0,1,size(X,2))-X).^2,1)))/norm(x0);
+%[~,pos2]=min(bst);
 %bval=norm(X(:,posi)-x0);
 %pos2
 xfin=X(:,posi);

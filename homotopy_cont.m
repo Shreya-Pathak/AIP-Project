@@ -2,7 +2,7 @@ function xfin=homotopy_cont(y,Phi,lam)
     % for bookeeping
 X = []; Lambda = []; Sparsity = [];
 % initialization
-N=200;
+N=size(Phi,2);
 C = Phi'*y;
 [lambda,I] = max(abs(C));
 x = zeros(N,1);
@@ -17,17 +17,17 @@ for it=1:niter
     if norm(c)<1e-6
         break;
     end
-    if it<=6
-        % Display to check that x_lambda is indeed a solution
-        subplot(2,3,it);
-        hold on;
-        stem( I, c(I)/lambda, 'b.' );
-        stem( J, c(J)/lambda, 'r.' );
-        plot([1 N], [1 1], 'k--');
-        plot([1 N],-[1 1], 'k--');
-        axis([1 N -1.05 1.05]);
-        title(['Step ' num2str(it)]);
-    end
+%     if it<=6
+%         % Display to check that x_lambda is indeed a solution
+%         subplot(2,3,it);
+%         hold on;
+%         stem( I, c(I)/lambda, 'b.' );
+%         stem( J, c(J)/lambda, 'r.' );
+%         plot([1 N], [1 1], 'k--');
+%         plot([1 N],-[1 1], 'k--');
+%         axis([1 N -1.05 1.05]);
+%         title(['Step ' num2str(it)]);
+%     end
     % update direction
     d = zeros(N,1);
     d(I) = (Phi(:,I)'*Phi(:,I)) \ sign(c(I));
@@ -72,8 +72,8 @@ for it=1:niter
     Sparsity(end+1) = length(I);
 end
 %rt=sqrt(sum((repmat(ycv,1,size(X,2))-Psi*X).^2,1));
-[val,posi]=min(abs(Lambda-lam));
-rt=sqrt(sum((repmat(y,1,size(X,2))-Phi*X).^2,1));
-[val2,pos2]=min(rt);
+[~,posi]=min(abs(Lambda-lam));
+% rt=sqrt(sum((repmat(y,1,size(X,2))-Phi*X).^2,1));
+% [val2,pos2]=min(rt);
 xfin=X(:,posi);
 end
