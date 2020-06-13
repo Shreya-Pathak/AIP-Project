@@ -1,0 +1,38 @@
+clear;
+N=3600;
+d=100;
+k=200;
+C=1;
+%r=70;
+m=800;
+sig=sqrt(0.05);
+rmin=5;
+rmax=90;
+total_expt=10;
+avgor=zeros(rmax-rmin+1,1);
+avgcv=zeros(rmax-rmin+1,1);
+avgomp=zeros(rmax-rmin+1,1);
+r=50;
+n=m-r;
+eps=3/sqrt(r);
+numexpts=1000;
+inlim=false(numexpts,1);
+x0=zeros(N,1);
+x0(randperm(N,d))=1;
+xa=x0;
+A=randn(n,N);
+n1 = sqrt(sum(A.^2,1));
+A= bsxfun(@rdivide,A,n1);
+y=A*xa + randn(n,1)*sig;
+[xcap_seq,netaor] = OMP_for_secVI(A,y,k,xa);
+netacv=zeros(numexpts,1);
+for i=1:numexpts
+    Acv=randn(r,N)/sqrt(r);
+    ycv=Acv*xa;
+    netacv(i)=min(sqrt(sum((repmat(ycv,1,k+1)-Acv*xcap_seq').^2)));
+    inlim(i)=( netacv(i)>=(1-eps)*netaor && netacv(i)<=(1+eps)*netaor );
+end
+plot([1:numexpts],netacv,[1:numexpts],ones(numexpts,1)*(1-eps)*netaor,[1:numexpts],ones(numexpts,1)*(1+eps)*netaor);
+legend({'\eta_{cv}','(1-\epsilon)\eta_{or}','(1+\epsilon)\eta_{or}'});
+xlabel('trial number');
+title('m_cv=50,m=750,N=3600,d=100,\epsilon=0.424');
