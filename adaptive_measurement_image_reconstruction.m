@@ -47,4 +47,4 @@ for i=[1:1:H-7]
     end
 end
 imshow(fimg./counter,[]);
-error1 = sqrt(sum((I-fimg./counter).^2)/sum(I.^2));
+error1 = sqrt(sum(sum((I-fimg./counter).^2))/sum(sum(I.^2)));
