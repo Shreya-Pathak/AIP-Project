@@ -1,4 +1,5 @@
 clear;
+clc;
 N=3600;
 d=100;
 k=200;
@@ -12,11 +13,13 @@ total_expt=10;
 avgor=zeros(rmax-rmin+1,1);
 avgcv=zeros(rmax-rmin+1,1);
 avgomp=zeros(rmax-rmin+1,1);
+avggap=zeros(rmax-rmin+1,1);
 for r=[rmin:rmax]
     r
     tor=0;
     tcv=0;
     tomp=0;
+    tgap=0;
     for ne=1:total_expt
         n=m-r;
         eps=3/sqrt(r);
@@ -34,8 +37,13 @@ for r=[rmin:rmax]
         tor=tor+netaor;
         tcv=tcv+netacv;
         tomp=tomp+netaomp;
+        tgap=tgap+abs(netaor-netacv);
     end
     avgor(r-rmin+1)=tor/total_expt;
     avgcv(r-rmin+1)=tcv/total_expt;
     avgomp(r-rmin+1)=tomp/total_expt;
+    avggap(r-rmin+1)=tgap/total_expt;
 end
+plot([rmin:rmax],arrayfun(@(x) 3/sqrt(x),[rmin:rmax]).*avgor',[rmin:rmax],avgor,[rmin:rmax],avgcv,[rmin:rmax],avgomp,[rmin:rmax],avggap);
+legend({'\epsilon\eta_{or}','\eta_{or}','\eta_{cv}','\eta_{omp}','|\eta_{cv}-\eta_{or}|'});
+xlabel('number of cv measurements');
